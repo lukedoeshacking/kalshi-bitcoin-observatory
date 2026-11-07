@@ -1,0 +1,31 @@
+name: Update forecasts
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: forecast-publication
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node publish.mjs
+      - run: |
+          git config user.name forecast-bot
+          git config user.email forecast-bot@users.noreply.github.com
+          git add docs/feed.json
+          git commit -m "Record timestamped forecast"
+          git push
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+      - uses: actions/deploy-pages@v4

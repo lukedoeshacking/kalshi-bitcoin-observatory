@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Bitcoin Observatory</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f3eb;color:#142f28;font:16px system-ui}main{max-width:960px;margin:auto;padding:32px 5vw}header,footer,.row{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}header{border-bottom:2px solid;padding-bottom:20px}a{color:inherit}h1{font:clamp(42px,8vw,84px)/1 Georgia;margin:48px 0 14px;letter-spacing:-.06em}h2{font:30px Georgia}section{background:#143b32;color:#fbfbef;padding:30px;border-radius:14px;margin:25px 0}strong{font:clamp(52px,10vw,98px) Georgia;color:#dbef88}canvas{width:100%;height:80px;display:block}small,dt{font:13px monospace}dd{margin:6px 0;font-size:22px}dl{display:flex;gap:35px;flex-wrap:wrap}table{border-collapse:collapse;width:100%}td,th{text-align:left;padding:12px 4px;border-bottom:1px solid #bac5b7}footer{padding:24px 0}p{line-height:1.55}
+</style>
+<main><header><b>₿ &nbsp; Bitcoin Observatory</b><a href="https://github.com/lukedoeshacking/kalshi-bitcoin-observatory">GitHub ↗</a></header>
+<h1>Bitcoin, next 15 minutes.</h1><p>Forecasts for Kalshi’s Bitcoin up-or-down contracts.</p>
+<section><div class="row"><span>Model probability · YES</span><small id="status" role="status">Loading feed…</small></div><strong id="prob">—</strong><p id="time"></p><canvas id="chart" width="900" height="90" aria-label="Bitcoin price over the previous hour"></canvas><small>BTC/USD · previous 60 minutes</small></section>
+<dl><div><dt>Coinbase spot</dt><dd id="spot">—</dd></div><div><dt>Kalshi threshold</dt><dd id="strike">—</dd></div><div><dt>YES bid / ask</dt><dd id="quote">—</dd></div></dl>
+<h2>Forecast history</h2><table><thead><tr><th>Contract close</th><th>Forecast time</th><th>YES</th></tr></thead><tbody id="rows"></tbody></table>
+<h2>How to read the forecast</h2><p>The model compares Coinbase spot with the contract threshold and scales the distance by the last hour’s one-minute volatility and time remaining. Kalshi settles using a 60-second BRTI average. Differences between Coinbase and BRTI can matter near the threshold. This experimental model has no verified accuracy or trading return.</p><footer><small>Latest observation per contract · times in your timezone</small></footer></main>
+<script type="module">
+const el=id=>document.getElementById(id), pct=x=>(100*x).toFixed(1)+'%', clock=t=>new Date(t).toLocaleTimeString(), money=x=>x.toLocaleString(undefined,{style:'currency',currency:'USD'});
+async function refresh(){
+ try{
+ const res=await fetch('feed.json',{cache:'no-store'}); if(!res.ok)throw Error();
+ const {history}=await res.json(),s=history[0]; if(!s)throw Error();
+ el('prob').textContent=pct(s.probability);el('time').textContent='Observed '+clock(s.at)+' · Contract closes '+clock(s.closes);
+ el('status').textContent=Date.now()>=Date.parse(s.closes)?'Contract closed':Date.now()-Date.parse(s.at)>120000?'Delayed snapshot':'Recent snapshot';
+ el('spot').textContent=money(s.spot);el('strike').textContent=money(s.strike);el('quote').textContent=pct(s.bid)+' / '+pct(s.ask);
+ const c=el('chart').getContext('2d'),p=s.prices,min=Math.min(...p),range=Math.max(...p)-min;
+ c.clearRect(0,0,900,90);c.beginPath();p.forEach((v,i)=>c.lineTo(i*900/(p.length-1),84-76*(v-min)/(range||1)));c.strokeStyle='#dbef88';c.lineWidth=2;c.stroke();
+ el('rows').replaceChildren(...history.map(r=>{const tr=document.createElement('tr');for(const v of [new Date(r.closes).toLocaleString(),clock(r.at),pct(r.probability)])tr.insertCell().textContent=v;return tr;}));
+ }catch{el('status').textContent='Feed unavailable';}
+}
+refresh();setInterval(refresh,30000);
+</script></html>
