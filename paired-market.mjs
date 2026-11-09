@@ -1,10 +1,10 @@
 const api='https://external-api.kalshi.com/trade-api/v2';
 export async function get(path){
-  for(let i=0;i<5;i++){
+  for(let i=0;i<12;i++){
     const r=await fetch(api+path,{signal:AbortSignal.timeout(20000)});
     if(r.ok)return r.json();
     if(r.status!==429)throw Error('HTTP '+r.status);
-    await new Promise(resolve=>setTimeout(resolve,1000*(i+1)));
+    await new Promise(resolve=>setTimeout(resolve,Math.min(30000,1500*2**i)+Math.random()*1000));
   }
   throw Error('Rate limited');
 }
@@ -22,3 +22,4 @@ export async function pairedFills(m){
   }while(cursor && (yes<100 || no<100));
   return {yes,no};
 }
+
