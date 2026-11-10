@@ -1,0 +1,8 @@
+{
+  "manifest_version": 3,
+  "name": "Bitcoin Observatory",
+  "version": "1.0.0",
+  "description": "View the latest published Bitcoin Observatory forecast.",
+  "action": {"default_popup": "popup.html"},
+  "host_permissions": ["https://lukedoeshacking.github.io/*"]
+}
