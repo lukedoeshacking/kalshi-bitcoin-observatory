@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en"><meta charset="utf-8"><title>Bitcoin Observatory</title>
-<style>body{width:280px;margin:20px;background:#143b32;color:white;font:15px system-ui}h1{font:24px Georgia}strong{display:block;font-size:40px;color:#dbef88}p{line-height:1.5}a{color:#dbef88}</style>
-<h1>Bitcoin Observatory</h1><div>Model probability · YES</div><strong id="prob">—</strong><p id="status" role="status">Loading forecast…</p>
-<a href="https://lukedoeshacking.github.io/kalshi-bitcoin-observatory/" target="_blank" rel="noopener">Open full dashboard ↗</a>
-<script src="popup.js"></script></html>
+<style>body{width:320px;margin:20px;background:#143b32;color:white;font:15px system-ui}h1{font:24px Georgia}strong{display:block;font-size:44px;color:#dbef88}dl{display:grid;grid-template-columns:1fr auto;gap:6px}dd{margin:0}small,p{line-height:1.5}a{color:#dbef88}</style>
+<h1>Bitcoin Observatory</h1><div>Model probability · YES</div><strong id="prob">—</strong>
+<dl><dt>Kalshi price to beat</dt><dd id="strike">—</dd><dt>Coinbase BTC/USD</dt><dd id="spot">—</dd><dt>Kalshi YES bid / ask</dt><dd id="quote">—</dd><dt>Time to close</dt><dd id="left">—</dd></dl>
+<small id="contract"></small><p id="status" role="status">Finding the current contract…</p>
+<a href="https://lukedoeshacking.github.io/kalshi-bitcoin-observatory/" target="_blank" rel="noopener">Forecast history ↗</a>
+<script type="module" src="popup.js"></script></html>

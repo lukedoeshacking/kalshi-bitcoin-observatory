@@ -1,8 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Bitcoin Observatory",
-  "version": "1.0.0",
-  "description": "View the latest published Bitcoin Observatory forecast.",
-  "action": {"default_popup": "popup.html"},
-  "host_permissions": ["https://lukedoeshacking.github.io/*"]
+  "version": "1.1.0",
+  "description": "Follow the active Kalshi Bitcoin contract with a live price-to-beat forecast.",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "host_permissions": [
+    "https://external-api.kalshi.com/*",
+    "https://api.exchange.coinbase.com/*"
+  ]
 }
